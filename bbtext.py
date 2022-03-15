@@ -33,15 +33,23 @@ def bb_of(chars: list[Union[LTChar, LTAnno]]) -> BB:
 
 
 @click.command()
+@click.option('--cover', type=click.Choice(['contain', 'overlap'], case_sensitive=False), required=True)
 @click.argument('page_num', type=click.INT)
 @click.argument('x1', type=click.FLOAT)
 @click.argument('y1', type=click.FLOAT)
 @click.argument('x2', type=click.FLOAT)
 @click.argument('y2', type=click.FLOAT)
 @click.argument('pdf_fp', type=click.Path(exists=True))
-def main(page_num: int, x1: float, y1: float, x2: float, y2: float, pdf_fp: str):
+def main(page_num: int, x1: float, y1: float, x2: float, y2: float, pdf_fp: str, cover: str):
     query_page_num = page_num
     query = BB(x1, y1, x2, y2)
+
+    if cover == 'contain':
+        covered = contained
+    elif cover == 'overlap':
+        covered = overlapping
+    else:
+        raise RuntimeError(f'Unknown cover type "{cover}".')
 
     for i, page in enumerate(extract_pages(pdf_fp)):
         page_num = i + 1
@@ -59,7 +67,7 @@ def main(page_num: int, x1: float, y1: float, x2: float, y2: float, pdf_fp: str)
                         if isinstance(char, LTChar):
                             assert char.x1 - char.x0 > 0
                             assert char.y1 - char.y0 > 0
-                            if contained(query, char):
+                            if covered(query, char):
                                 matched_chars.append(char)
                             elif len(matched_chars) > 0:
                                 # Nothing left can be a matched char
