@@ -1,12 +1,11 @@
 from collections import namedtuple
-from io import StringIO
 import json
 import sys
 from typing import Union
 
 import click
-from pdfminer.layout import LAParams, LTTextBox, LTAnno, LTChar
-from pdfminer.high_level import extract_text_to_fp, extract_pages
+from pdfminer.layout import LTTextBox, LTAnno, LTChar
+from pdfminer.high_level import extract_pages
 
 
 BB = namedtuple('BB', ['x0', 'y0', 'x1', 'y1'])
