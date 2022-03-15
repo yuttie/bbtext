@@ -6,6 +6,7 @@ authors = ["Yuta Taniguchi <yuta.taniguchi.y.t@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+"pdfminer.six" = "^20211012"
 
 [tool.poetry.dev-dependencies]
 
